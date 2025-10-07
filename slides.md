@@ -5,4 +5,10 @@ Drift is a change in the joint data distribution P(X,Y) over time.
 
 --
 
-# Drift
+# Types of Drift
+## By what changes
+
+<img src="figures/real_virtual_drift.png" alt="Drift types" style="width:70%">
+
+
+--
