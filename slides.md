@@ -12,3 +12,16 @@ Drift is a change in the joint data distribution P(X,Y) over time.
 
 
 --
+
+# Types of Drift
+## By how it changes
+
+<img src="figures/drift_classes.png" alt="Drift types_in_time" style="width:70%">
+
+
+--
+
+# Why do we Detect Drift?
+- Detect changes in data or concept →  model adaptation (e.g. retraining)
+- Ensure the model remains accurate and relevant as the world changes
+
