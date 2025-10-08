@@ -4,14 +4,17 @@ Drift is a change in the joint data distribution P(X,Y) over time.
 
 --
 
-# Some Real world examples on where there is drift maybe?
-
---
-
 # Types of Drift
 ## By what changes
 
 <img src="figures/real_virtual_drift.png" alt="Drift types" style="width:70%">
+
+Note:
+
+Ας φανταστούμε ένα μοντέλο που ανιχνεύει απάτη σε συναλλαγές.
+Αν αλλάξει μόνο ο τρόπος που μοιάζουν οι συναλλαγές — για παράδειγμα, περισσότερες online αγορές τα Χριστούγεννα — έχουμε virtual drift: αλλάζει η κατανομή των εισόδων, όχι η σχέση με την απάτη.
+Αν όμως οι απατεώνες αλλάξουν στρατηγική και κάνουν μικρότερες, πιο “κανονικές” συναλλαγές, αλλάζει η σχέση μεταξύ εισόδου και εξόδου — αυτό είναι actual drift.
+Και αν αλλάξουν και οι δύο πλευρές, δηλαδή και η συμπεριφορά των χρηστών και των απατεώνων, τότε έχουμε concept drift.
 
 --
 
