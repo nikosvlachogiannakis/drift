@@ -62,28 +62,26 @@ Unsupervised drift detection algorithms rely **only on the input features** $X
 
 --
 
-# Block-based Methods — “Analyze the story in chapters”
+# Block-based Methods
+## “Analyze the story in chapters”
 
-They divide the data stream into large, fixed-size blocks.
+Divide the data stream into large, fixed-size blocks.
 Each block is treated as a complete statistical unit, analyzed individually or compared with previous blocks.
 
 ## How it works:
 
 - Each block represents a full distribution snapshot.
-
 - Drift can be detected within a block or between consecutive blocks.
 
 ## Pros:
 
 - Robust to noise.
-
 - Can detect multiple drifts within a block.
 
 ## Cons:
 
-- Slow reaction time (waits for block completion).
-
-- Computationally heavier.
+- Slow reaction time (waits for block completion)
+- Computationally heavy
 
 Note:
 
@@ -95,13 +93,12 @@ Block-based methods use large, mostly non-overlapping windows analyzed as indepe
 
 --
 
-# Batch-based Methods — “Compare yesterday and today”
+# Batch-based Methods
+## “Compare yesterday and today”
 
 They keep two smaller windows of data:
 - A reference window (past concept).
 - A detection window (recent data).
-
-They compare distributions (e.g., KS test) to check if the new batch differs significantly from the old one
 
 ## How it works:
 
@@ -119,6 +116,8 @@ They compare distributions (e.g., KS test) to check if the new batch differs sig
 
 Note:
 
+They compare distributions (e.g., KS test) to check if the new batch differs significantly from the old one
+
 Examples: NN-DVI, SQSI.
 
 ## Key distinction:
@@ -127,7 +126,8 @@ Batch-based methods rely on explicit comparison between two consecutive windows,
 
 --
 
-# Online-based Methods — “React as the words change”
+# Online-based Methods
+## “React as the words change”
 
 They detect drift continuously, updating statistics as each instance arrives.
 
@@ -155,20 +155,19 @@ Online-based methods differ mainly in timing — they update continuously per in
 
 --
 
-# Meta-statistic-based Methods — “Watch the watcher”
+# Meta-statistic-based Methods
+## “Watch the watcher”
 
-They don’t analyze raw data directly — they monitor how a model behaves.
+They don’t analyze raw data directly, they monitor how a model behaves.
 
 ## How it works:
 
 - Monitors metrics such as error rate or loss
-
 - Apply a statistical test (e.g., ADWIN) to detect significant changes in these metrics.
 
 ## Pros:
 
 - Model-agnostic, works with any learner.
-
 - Can function even without labels (unsupervised drift).
 
 ## Cons:
