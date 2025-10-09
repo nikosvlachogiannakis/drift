@@ -66,20 +66,19 @@ Unsupervised drift detection algorithms rely **only on the input features** $X
 --
 
 # Block-based Methods
-## “Analyze the story in chapters”
+<!-- ## “Analyze the story in chapters” -->
 
-Divide the data stream into large, fixed-size blocks.
-Each block is treated as a complete statistical unit, analyzed individually or compared with previous blocks.
+Divides the data stream into blocks.
+Each block is analyzed individually.
 
 ## How it works:
 
-- Each block represents a full distribution snapshot.
-- Drift can be detected within a block or between consecutive blocks.
+- In each block runs a change point algorithm
 
 ## Pros:
 
-- Robust to noise.
-- Can detect multiple drifts within a block.
+- Robust to noise
+- Can detect multiple drifts within a block
 
 ## Cons:
 
@@ -88,38 +87,53 @@ Each block is treated as a complete statistical unit, analyzed individually or c
 
 Note:
 
-Examples: Kernel MMD, Wasserstein-based detectors.
+# Change point algorithm
+
+Looks for positions where the statistical distribution before and after changes significantly
+
+Given a time-ordered sequence x_1, x_2,…,x_T, the algorithm tries to identify time 
+indices τ_1 ,τ_2, …, τ_k where something fundamental in the data changes — like its 
+mean, variance, correlation, or probability distribution
+
+# Heavy
+
+- Process large blocks of data at once,
+
+- Often analyze the entire block holistically, not just sample summaries,
+
+- And may search for multiple change points within the block
+
+Examples: Kernel MMD, Wasserstein-based detectors
 
 ## Key distinction:
 
-Block-based methods use large, mostly non-overlapping windows analyzed as independent data segments, not as continuously moving windows.
+Block-based methods use large, mostly non-overlapping windows analyzed as independent data segments, not as continuously moving windows
 
 --
 
 # Batch-based Methods
-## “Compare yesterday and today”
+<!-- ## “Compare yesterday and today” -->
 
 They keep two smaller windows of data:
-- A reference window (past concept).
-- A detection window (recent data).
+- A reference window (past concept)
+- A detection window (recent data)
 
 ## How it works:
 
-- Windows can be fixed, sliding, or adaptive.
-- When differences exceed a threshold $\rightarrow$ drift detected.
+- Windows can be fixed, sliding, or adaptive
+- When differences exceed a threshold $\rightarrow$ drift detected
 
 ## Pros:
 
-- Detects both gradual and sudden drifts.
+- Detects both gradual and sudden drifts
 
 ## Cons:
 
-- Must wait for both windows to fill.
-- Choice of window size impacts sensitivity.
+- Choice of window size impacts sensitivity
 
 Note:
 
-They compare distributions (e.g., KS test) to check if the new batch differs significantly from the old one
+They compare distributions (e.g., KS test, MMD) to check if the new batch differs significantly from the old one
 
 Examples: NN-DVI, SQSI.
 
@@ -130,19 +144,19 @@ Batch-based methods rely on explicit comparison between two consecutive windows,
 --
 
 # Online-based Methods
-## “React as the words change”
+<!-- ## “React as the words change” -->
 
-They detect drift continuously, updating statistics as each instance arrives.
+They detect drift continuously, updating statistics as each instance arrives
 
 ## How it works:
 
-- Use sliding or adaptive windows that move forward with every new data point.
+- Use sliding or adaptive window that is updated with every new data point
 
-- Apply incremental statistics or hypothesis tests in real time.
+- Apply test statistics or hypothesis tests in real time
 
 ## Pros:
 
-- Fastest detection, reacts immediately to change.
+- Fastest detection, reacts immediately to change
 
 ## Cons:
 
@@ -150,48 +164,59 @@ They detect drift continuously, updating statistics as each instance arrives.
 
 Note:
 
+1. Receive a new data point x_t
+
+2. Update the current statistic (mean, variance, error, etc.) using x_t.
+
+3. Compute a test statistic to check for significant change.
+
+4. Trigger drift if the test statistic exceeds a threshold.
+
+5. Reset or shrink the window if drift is detected.
+
+# Test Statistic
+
+A test statistic is simply a numerical measure of how much the current data deviates from what’s expected under the “no drift” assumption.
+
+Then the detector checks: T_t > threshold⇒drift detected
+
+- Mean-based statistics (Page-Hinkley)
+- Variance-based statistics
+- Distance-based statistics
+
+
+Batch-based:
+
+- Wait until you have 100 samples in the detection window.
+- Compare it to the previous 100 samples (reference).
+- Perform the test → decide drift or no drift.
+- Slide the window (maybe by 10 or 50 samples) → repeat.
+
+👉 Detection only happens after every batch, e.g., every 100 samples.
+
+🔹 Online-based:
+
+- As soon as each new sample arrives:
+- Update your statistic (mean, error, likelihood, etc.).
+- Check if it deviates significantly.
+- If so → drift.
+
+👉 Detection happens continuously, potentially every single data point.
+
+# ADWIN
+
+ADWIN (ADaptive WINdowing) maintains a dynamically sized window W of recent data.
+
+1. When a new instance arrives, it adds it to W.
+2. It splits W into two sub-windows W_1 and W_2.
+3. It compares their means using a Hoeffding bound to test if they differ significantly.
+4. If yes → drift detected, and old data (the earlier part of the window) is dropped.
+
 Examples: ADWIN, DSDD, Page-Hinkley, SAND.
 
 ## Key distinction:
 
 Online-based methods differ mainly in timing — they update continuously per instance, unlike batch or block methods that wait for windows to fill.
-
---
-
-# Meta-statistic-based Methods
-## “Watch the watcher”
-
-They don’t analyze raw data directly, they monitor how a model behaves.
-
-## How it works:
-
-- Monitors metrics such as error rate or loss
-- Apply a statistical test (e.g., ADWIN) to detect significant changes in these metrics.
-
-## Pros:
-
-- Model-agnostic, works with any learner.
-- Can function even without labels (unsupervised drift).
-
-## Cons:
-
-- Indirect, relies on model accuracy which may miss subtle (virtual) drifts
-
-Note:
-
-Model-agnostic means:
-
-1. Doesn’t assume a specific data distribution,
-
-2. Compares windows of data, and
-
-3. Tests for statistical independence between features and labels (or between time and data)
-
-Examples: Model + ADWIN, loss-based drift detection, reconstruction error drift detection.
-
-## Key distinction:
-
-Meta-statistic methods differ in what they monitor — they watch model performance or error trends, not the raw input data distributions.
 
 ---
 
