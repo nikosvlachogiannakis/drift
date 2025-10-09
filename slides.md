@@ -41,7 +41,7 @@ Note: It helps identify when things start to deviate from expected standards—l
 
 # Supervised Drift Detection
 
-Algorithms assume that true labels are available for at least some portion of the incoming data in order for the model to be trained
+Algorithms assume that true labels are available in order for the model to be trained
 
 --
 
