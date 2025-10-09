@@ -264,3 +264,10 @@ Once we have enough samples in our window (at least $n_{min}$), we perform a sta
 - If $H_0$ is reject, that means the distribution of $X$ has changed with time. So, a drift is detected
   - We signal a **drift event**
   - **Shrink** the window down to a small size, typically keeping only the last $n_{min}$ samples
+
+
+Note: 
+
+- chi-square test for independence
+
+- Hilbert–Schmidt Independence Criterion
